@@ -1,0 +1,10 @@
+# Requirements for THIS repository (training the external model + test.py).
+# alpha-beta-CROWN itself should be installed in its own conda environment
+# using the environment.yaml shipped in its repo (see README.md):
+#   conda env create -f complete_verifier/environment.yaml --name alpha-beta-crown
+#
+# Tested with Python 3.11.
+torch>=2.1
+torchvision>=0.16
+numpy
+pyyaml

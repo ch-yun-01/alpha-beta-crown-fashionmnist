@@ -1,0 +1,55 @@
+# Verification config: FashionMNIST small CNN, L_inf robustness, eps = 8/255.
+#
+# Run from inside alpha-beta-CROWN/complete_verifier:
+#   python abcrown.py --config <path-to-this-file>
+#
+# Prerequisites (see README.md of this repo):
+#   1. fashion_mnist_model.py copied to complete_verifier/custom/
+#   2. fashion_mnist_cnn.pth copied to complete_verifier/models/
+general:
+  device: cuda            # set to cpu if no GPU is available
+  seed: 100
+  complete_verifier: bab  # branch and bound (beta-CROWN) after incomplete verification
+  enable_incomplete_verification: true
+
+model:
+  # Customized("module_in_custom_dir", "function_returning_the_model")
+  name: Customized("fashion_mnist_model", "fashion_mnist_cnn")
+  path: models/fashion_mnist_cnn.pth
+  input_shape: [-1, 1, 28, 28]
+
+data:
+  # Custom dataloader defined in custom/fashion_mnist_model.py
+  dataset: Customized("fashion_mnist_model", "fashion_mnist_dataset")
+  num_outputs: 10
+  start: 0      # verify test examples [start, end)
+  end: 50
+
+specification:
+  type: lp
+  norm: .inf
+  epsilon: 0.03137254901960784   # 8/255 in pixel space; dataloader rescales by std
+  robustness_type: verified-acc  # verify against all 9 wrong labels
+
+attack:
+  # PGD attack runs first to quickly filter falsifiable examples.
+  pgd_order: before
+  pgd_steps: 100
+  pgd_restarts: 30
+
+solver:
+  batch_size: 2048   # number of subdomains bounded in parallel; reduce if OOM
+  alpha-crown:
+    iteration: 100
+    lr_alpha: 0.1
+  beta-crown:
+    iteration: 20
+    lr_alpha: 0.01
+    lr_beta: 0.05
+
+bab:
+  timeout: 120   # seconds per instance
+  branching:
+    method: kfsb   # balanced branching heuristic (babsr=fast, fsb=accurate)
+    candidates: 3
+    reduceop: min
