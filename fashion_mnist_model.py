@@ -3,38 +3,29 @@ fashion_mnist_model.py
 ----------------------
 Custom model definition + custom dataloader for alpha-beta-CROWN.
 
-This file must be COPIED into the alpha-beta-CROWN repository at:
-
-    alpha-beta-CROWN/complete_verifier/custom/fashion_mnist_model.py
-
-It is then referenced from the YAML config via the Customized() primitive:
-
+Loaded via the Customized() primitive in the YAML config:
     model:
       name: Customized("fashion_mnist_model", "fashion_mnist_cnn")
       path: models/fashion_mnist_cnn.pth
     data:
       dataset: Customized("fashion_mnist_model", "fashion_mnist_dataset")
+      mean: [0.2860]
+      std:  [0.3530]
 
-The structure follows the official tutorial example
-complete_verifier/custom/custom_model_data.py (see the repo). If the return
-signature of the dataloader changes in a future version, compare against
-that file.
+Follows the signature of cifar10(spec, use_bounds=False) in the official
+example custom/custom_model_data.py for this repo version.
 """
 
 import os
 import torch
 import torch.nn as nn
 from torchvision import datasets, transforms
-
-# Must match the normalization used during training (train_model.py).
-MEAN = 0.2860
-STD = 0.3530
+import arguments
 
 
 def fashion_mnist_cnn():
-    """Model architecture. alpha-beta-CROWN calls this function to build the
-    network, then loads the checkpoint given by `model: path` in the config.
-    Identical to the definition in train_model.py."""
+    """Model architecture. Must match train_model.py exactly so the
+    checkpoint loads cleanly."""
     return nn.Sequential(
         nn.Conv2d(1, 16, kernel_size=4, stride=2, padding=1),   # 16 x 14 x 14
         nn.ReLU(),
@@ -47,44 +38,43 @@ def fashion_mnist_cnn():
     )
 
 
-def fashion_mnist_dataset(eps):
+def fashion_mnist_dataset(spec, use_bounds=False):
     """Custom dataloader for the FashionMNIST test set.
 
-    Args:
-        eps: perturbation radius in *unnormalized* pixel space [0, 1],
-             passed from `specification: epsilon` in the YAML config.
-
-    Returns (following the convention of custom_model_data.py):
-        X:        normalized test images, shape (N, 1, 28, 28)
-        labels:   ground-truth labels, shape (N,)
-        data_max: elementwise upper bound of valid (normalized) inputs
-        data_min: elementwise lower bound of valid (normalized) inputs
-        eps_temp: eps converted into the normalized input space
+    Mirrors cifar10() in custom_model_data.py: takes a `spec` object,
+    reads epsilon from it, and reads mean/std from the config. Returns
+    (X, labels, data_max, data_min, eps) where eps is rescaled into the
+    normalized input space.
     """
-    assert eps is not None, "specification: epsilon must be set in the config"
+    eps = spec["epsilon"]
+    assert eps is not None, "You must specify an epsilon in the config."
 
-    database_path = os.path.join(os.path.dirname(__file__), "..", "datasets")
-    transform = transforms.Compose([
-        transforms.ToTensor(),
-        transforms.Normalize((MEAN,), (STD,)),
-    ])
-    test_set = datasets.FashionMNIST(database_path, train=False,
-                                     download=True, transform=transform)
+    database_path = os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), "datasets")
+    mean = torch.tensor(arguments.Config["data"]["mean"])
+    std = torch.tensor(arguments.Config["data"]["std"])
+    normalize = transforms.Normalize(mean=mean, std=std)
 
-    # Load the whole test set into memory; `data: start/end` in the config
-    # selects which examples are actually verified.
-    loader = torch.utils.data.DataLoader(test_set, batch_size=len(test_set),
-                                         shuffle=False)
-    X, labels = next(iter(loader))
+    test_data = datasets.FashionMNIST(
+        database_path, train=False, download=True,
+        transform=transforms.Compose([transforms.ToTensor(), normalize]))
+    testloader = torch.utils.data.DataLoader(
+        test_data, batch_size=10000, shuffle=False, num_workers=4)
+    X, labels = next(iter(testloader))
 
-    # Valid pixel range is [0, 1] before normalization. After normalization
-    # the valid range becomes [(0 - mean)/std, (1 - mean)/std]. The verifier
-    # clips the perturbation ball to this range so that the property is only
-    # checked over valid images.
-    data_max = torch.tensor((1.0 - MEAN) / STD).reshape(1, -1, 1, 1)
-    data_min = torch.tensor((0.0 - MEAN) / STD).reshape(1, -1, 1, 1)
+    if use_bounds:
+        # Element-wise bounds (use only with specification: type = bound).
+        absolute_max = torch.reshape((1. - mean) / std, (1, -1, 1, 1))
+        absolute_min = torch.reshape((0. - mean) / std, (1, -1, 1, 1))
+        new_eps = torch.reshape(eps / std, (1, -1, 1, 1))
+        data_max = torch.min(X + new_eps, absolute_max)
+        data_min = torch.max(X - new_eps, absolute_min)
+        ret_eps = None
+    else:
+        # Single epsilon + clipping bounds. Pixels clipped to [0,1] before
+        # normalization -> normalized range [(0-mean)/std, (1-mean)/std].
+        data_max = torch.reshape((1. - mean) / std, (1, -1, 1, 1))
+        data_min = torch.reshape((0. - mean) / std, (1, -1, 1, 1))
+        ret_eps = torch.reshape(eps / std, (1, -1, 1, 1))
 
-    # eps is given in pixel space; convert it to normalized space.
-    eps_temp = torch.tensor(eps / STD).reshape(1, -1, 1, 1)
-
-    return X, labels, data_max, data_min, eps_temp
+    return X, labels, data_max, data_min, ret_eps

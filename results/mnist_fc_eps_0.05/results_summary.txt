@@ -1,0 +1,62 @@
+alpha-beta-CROWN verification summary
+=============================================
+
+Config: configs/mnist_fc_eps_0.05.yaml
+ idx  raw status         category    time (s)
+   0  unsafe-pgd         falsified       0.52
+   1  safe-incomplete    verified        0.56
+   2  unsafe-pgd         falsified       0.02
+   3  safe-incomplete    verified        0.37
+   4  unsafe-pgd         falsified       0.02
+   5  unsafe-pgd         falsified       0.02
+   6  unsafe-pgd         falsified       0.02
+   7  unsafe-pgd         falsified       0.02
+   8  unsafe-pgd         falsified       0.01
+   9  unsafe-pgd         falsified       0.03
+  10  safe               verified        2.83
+  11  unsafe-pgd         falsified       0.03
+  12  unsafe-pgd         falsified       0.02
+  13  safe               verified        1.16
+  14  unsafe-pgd         falsified       0.03
+  15  unsafe-pgd         falsified       0.02
+  16  safe               verified        1.73
+  17  unsafe-pgd         falsified       0.04
+  18  unsafe-pgd         falsified       0.02
+  19  unsafe-pgd         falsified       0.02
+  20  unsafe-pgd         falsified       0.02
+  21  unsafe-pgd         falsified       0.02
+  22  unsafe-pgd         falsified       0.02
+  23  safe               verified        1.38
+  24  unsafe-pgd         falsified       0.02
+  25  safe-incomplete    verified        0.36
+  26  unsafe-pgd         falsified       0.02
+  27  unsafe-pgd         falsified       0.02
+  28  safe-incomplete    verified        0.36
+  29  unsafe-pgd         falsified       0.02
+  30  safe               verified        1.02
+  31  unsafe-pgd         falsified       0.03
+  32  unsafe-pgd         falsified       0.03
+  33  unsafe-pgd         falsified       0.01
+  34  unsafe-pgd         falsified       0.03
+  35  unsafe-pgd         falsified       0.03
+  36  unsafe-pgd         falsified       0.02
+  37  unsafe-pgd         falsified       0.02
+  38  unsafe-pgd         falsified       0.02
+  39  unsafe-pgd         falsified       0.02
+  40  unsafe-pgd         falsified       0.02
+  41  unsafe-pgd         falsified       0.02
+  42  unsafe-pgd         falsified       0.02
+  43  unsafe-pgd         falsified       0.02
+  44  unsafe-pgd         falsified       0.02
+  45  unsafe-pgd         falsified       0.02
+  46  unsafe-pgd         falsified       0.02
+  47  unsafe-pgd         falsified       0.02
+  48  unsafe-pgd         falsified       0.02
+  49  unsafe-pgd         falsified       0.02
+
+Total instances: 50
+  verified  : 9
+  falsified : 41
+  timeout   : 0
+  mean time : 0.22 s
+  max time  : 2.83 s

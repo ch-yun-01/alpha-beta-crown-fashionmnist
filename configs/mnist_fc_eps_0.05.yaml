@@ -1,0 +1,38 @@
+# MNIST FC (784->32->16->10), ONNX model from Assignment #3, for Marabou comparison.
+# No normalization (raw [0,1] pixels), so epsilon in pixel space = normalized space.
+general:
+  device: cuda
+  seed: 100
+  complete_verifier: bab
+  enable_incomplete_verification: true
+model:
+  name: Customized("mnist_fc_model", "mnist_fc")
+  path: models/mnist_fc.pth
+  input_shape: [-1, 1, 28, 28]
+data:
+  dataset: MNIST
+  num_outputs: 10
+  mean: [0.0]
+  std: [1.0]
+  start: 0
+  end: 50
+specification:
+  type: lp
+  norm: .inf
+  epsilon: 0.05
+  robustness_type: verified-acc
+attack:
+  pgd_order: before
+  pgd_steps: 100
+  pgd_restarts: 30
+solver:
+  batch_size: 2048
+  alpha-crown:
+    iteration: 100
+    lr_alpha: 0.1
+  beta-crown:
+    iteration: 20
+bab:
+  timeout: 120
+  branching:
+    method: kfsb

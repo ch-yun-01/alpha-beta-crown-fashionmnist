@@ -1,0 +1,62 @@
+alpha-beta-CROWN verification summary
+=============================================
+
+Config: configs/fashion_mnist_eps_1_255.yaml
+ idx  raw status         category    time (s)
+   0  safe-incomplete    verified        1.53
+   1  safe-incomplete    verified        0.46
+   2  safe-incomplete    verified        0.46
+   3  safe-incomplete    verified        0.46
+   4  safe-incomplete    verified        0.64
+   5  safe-incomplete    verified        0.46
+   6  safe-incomplete    verified        0.45
+   7  safe-incomplete    verified        0.46
+   8  safe-incomplete    verified        0.46
+   9  safe-incomplete    verified        0.44
+  10  safe-incomplete    verified        0.45
+  11  safe-incomplete    verified        0.45
+  12  unsafe-pgd         falsified       0.04
+  13  safe-incomplete    verified        0.46
+  14  safe-incomplete    verified        0.47
+  15  safe-incomplete    verified        0.47
+  16  safe-incomplete    verified        0.54
+  17  unsafe-pgd         falsified       0.04
+  18  safe-incomplete    verified        0.56
+  19  safe-incomplete    verified        0.63
+  20  safe-incomplete    verified        0.46
+  21  safe-incomplete    verified        0.54
+  22  safe-incomplete    verified        0.47
+  23  unsafe-pgd         falsified       0.03
+  24  safe-incomplete    verified        0.45
+  25  unsafe-pgd         falsified       0.03
+  26  unsafe-pgd         falsified       0.04
+  27  safe-incomplete    verified        0.45
+  28  safe-incomplete    verified        0.46
+  29  safe-incomplete    verified        0.46
+  30  safe-incomplete    verified        0.46
+  31  safe-incomplete    verified        0.52
+  32  safe-incomplete    verified        0.45
+  33  safe-incomplete    verified        0.45
+  34  safe-incomplete    verified        0.66
+  35  safe-incomplete    verified        0.46
+  36  safe-incomplete    verified        0.46
+  37  safe-incomplete    verified        0.47
+  38  safe-incomplete    verified        0.46
+  39  safe-incomplete    verified        0.46
+  40  unsafe-pgd         falsified       0.03
+  41  safe-incomplete    verified        0.47
+  42  unsafe-pgd         falsified       0.03
+  43  safe-incomplete    verified        0.46
+  44  safe               verified        4.54
+  45  safe-incomplete    verified        0.45
+  46  safe-incomplete    verified        0.53
+  47  safe-incomplete    verified        0.46
+  48  safe-incomplete    verified        0.46
+  49  unsafe-pgd         falsified       0.03
+
+Total instances: 50
+  verified  : 42
+  falsified : 8
+  timeout   : 0
+  mean time : 0.51 s
+  max time  : 4.54 s

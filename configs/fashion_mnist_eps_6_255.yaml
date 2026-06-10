@@ -30,7 +30,7 @@ data:
 specification:
   type: lp
   norm: .inf
-  epsilon: 0.00784313725490196   # 2/255 in pixel space; dataloader rescales by std
+  epsilon: 0.023529411764705882   # 6/255
   robustness_type: verified-acc  # verify against all 9 wrong labels
 
 attack:
@@ -40,7 +40,7 @@ attack:
   pgd_restarts: 30
 
 solver:
-  batch_size: 2048   # number of subdomains bounded in parallel; reduce if OOM
+  batch_size: 512   # number of subdomains bounded in parallel; reduce if OOM
   alpha-crown:
     iteration: 100
     lr_alpha: 0.1
