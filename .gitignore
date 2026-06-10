@@ -9,3 +9,4 @@ env/
 data/
 datasets/
 *.pth
+.sh
