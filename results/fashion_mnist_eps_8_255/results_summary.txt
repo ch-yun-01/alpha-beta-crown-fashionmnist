@@ -1,0 +1,62 @@
+alpha-beta-CROWN verification summary
+=============================================
+
+Config: configs/fashion_mnist_eps_8_255.yaml
+ idx  raw status         category    time (s)
+   0  unsafe-pgd         falsified       0.65
+   1  unsafe-pgd         falsified       0.04
+   2  unknown            timeout       125.92
+   3  unknown            timeout       126.24
+   4  unsafe-pgd         falsified       0.04
+   5  unknown            timeout       121.54
+   6  unsafe-pgd         falsified       0.05
+   7  unsafe-pgd         falsified       0.04
+   8  unknown            timeout       124.88
+   9  unsafe-pgd         falsified       0.05
+  10  unsafe-pgd         falsified       0.04
+  11  unsafe-pgd         falsified       0.17
+  12  unsafe-pgd         falsified       0.04
+  13  unknown            timeout       125.06
+  14  unsafe-pgd         falsified       0.05
+  15  unknown            timeout       120.88
+  16  unsafe-pgd         falsified       0.05
+  17  unsafe-pgd         falsified       0.04
+  18  unsafe-pgd         falsified       0.04
+  19  unsafe-pgd         falsified       0.04
+  20  unsafe-pgd         falsified       0.04
+  21  unsafe-pgd         falsified       0.04
+  22  unsafe-pgd         falsified       0.04
+  23  unsafe-pgd         falsified       0.03
+  24  unknown            timeout       122.03
+  25  unsafe-pgd         falsified       0.03
+  26  unsafe-pgd         falsified       0.04
+  27  unsafe-pgd         falsified       0.04
+  28  unsafe-pgd         falsified       0.04
+  29  unsafe-pgd         falsified       0.04
+  30  unknown            timeout       126.85
+  31  unsafe-pgd         falsified       0.05
+  32  unsafe-pgd         falsified       0.04
+  33  unsafe-pgd         falsified       0.04
+  34  unsafe-pgd         falsified       0.04
+  35  unsafe-pgd         falsified       0.04
+  36  unknown            timeout       126.32
+  37  unsafe-pgd         falsified       0.05
+  38  unsafe-pgd         falsified       0.04
+  39  unknown            timeout       121.18
+  40  unsafe-pgd         falsified       0.04
+  41  unknown            timeout       132.20
+  42  unsafe-pgd         falsified       0.03
+  43  unsafe-pgd         falsified       0.04
+  44  unsafe-pgd         falsified       0.16
+  45  unsafe-pgd         falsified       0.04
+  46  unsafe-pgd         falsified       0.04
+  47  unsafe-pgd         falsified       0.04
+  48  unsafe-pgd         falsified       0.04
+  49  unsafe-pgd         falsified       0.03
+
+Total instances: 50
+  verified  : 0
+  falsified : 39
+  timeout   : 11
+  mean time : 27.51 s
+  max time  : 132.20 s
