@@ -8,5 +8,4 @@ env/
 .ipynb_checkpoints/
 data/
 datasets/
-*.pth
 .sh
