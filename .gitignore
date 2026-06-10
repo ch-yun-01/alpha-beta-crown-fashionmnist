@@ -1,0 +1,8 @@
+alpha-beta-CROWN/
+__pycache__/
+*.pyc
+.DS_Store
+*.log
+.venv/
+env/
+.ipynb_checkpoints/
