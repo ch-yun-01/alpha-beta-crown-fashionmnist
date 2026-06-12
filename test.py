@@ -1,18 +1,25 @@
 """
 test.py
 -------
-Demonstrates running alpha-beta-CROWN on our external model (FashionMNIST CNN)
-and summarizes the verification results, as required by the assignment.
+Runs alpha-beta-CROWN on our external models (FashionMNIST CNN and the MNIST FC
+network reused from Assignment #3) and summarizes the verification results, as
+required by the assignment.
 
-It launches `abcrown.py --config <config>` as a subprocess inside the cloned
-alpha-beta-CROWN repository, captures the log, and parses per-instance results
-(verified / falsified / timeout) and runtimes into a summary table.
+For each YAML config it launches `abcrown.py --config <config>` as a subprocess
+inside the cloned alpha-beta-CROWN repository, captures the log, and parses the
+per-instance results (verified / falsified / timeout) and runtimes into a
+per-config summary table.
 
 Usage:
+    # Run *all* configs in configs/ (default) — reproduces every experiment.
+    python test.py
+
+    # Run a single config.
     python test.py --config configs/fashion_mnist_eps_2_255.yaml
 
-Run all configs:
-    python test.py --all
+Each config's outputs are written to its own folder:
+    results/<config_stem>/results_summary.txt
+    results/<config_stem>/log_<config_stem>.txt
 """
 
 import argparse
@@ -123,8 +130,48 @@ def summarize(config_path: Path, results, out_lines):
         out_lines.append("  max time  : N/A")
 
 
+def run_one_config(abcrown_dir: Path, cfg: Path, results_root: Path):
+    """Run one config and write its summary + log into results/<config_stem>/."""
+    out_dir = results_root / cfg.stem
+    out_dir.mkdir(parents=True, exist_ok=True)
+
+    log = run_abcrown(abcrown_dir, cfg)
+
+    log_file = out_dir / f"log_{cfg.stem}.txt"
+    with open(log_file, "w", encoding="utf-8") as f:
+        f.write(log)
+    print(f"Full log saved to {log_file}")
+
+    results = parse_results(log)
+
+    out_lines = [
+        "alpha-beta-CROWN verification summary",
+        "=" * 45,
+    ]
+
+    if not results:
+        out_lines.append(
+            f"\nConfig: {cfg} -> no per-instance results parsed "
+            f"(check {log_file} for errors or changed log format)"
+        )
+    else:
+        summarize(cfg, results, out_lines)
+
+    summary = "\n".join(out_lines)
+    summary_file = out_dir / "results_summary.txt"
+    with open(summary_file, "w", encoding="utf-8") as f:
+        f.write(summary + "\n")
+
+    print(summary)
+    print(f"\nSummary saved to {summary_file}")
+
+    return results
+
+
 def main():
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(
+        description="Run alpha-beta-CROWN verification and summarize results."
+    )
 
     parser.add_argument(
         "--abcrown_dir",
@@ -136,84 +183,50 @@ def main():
     parser.add_argument(
         "--config",
         type=str,
-        default="configs/fashion_mnist_eps_2_255.yaml",
-        help="Path to a YAML config file",
+        default=None,
+        help="Run a single YAML config. If omitted, all configs in configs/ are run.",
     )
 
     parser.add_argument(
-        "--all",
-        action="store_true",
-        help="Run all YAML configs in configs/",
-    )
-
-    parser.add_argument(
-        "--out_dir",
+        "--results_dir",
         type=str,
         default="results",
-        help="Directory for logs and summary files",
+        help="Root directory for per-config result folders.",
     )
 
     args = parser.parse_args()
 
     project_root = Path.cwd()
     abcrown_dir = Path(args.abcrown_dir)
-    out_dir = Path(args.out_dir)
-    out_dir.mkdir(parents=True, exist_ok=True)
+    results_root = Path(args.results_dir)
+    results_root.mkdir(parents=True, exist_ok=True)
 
     abcrown_py = abcrown_dir / "abcrown.py"
     if not abcrown_py.is_file():
         sys.exit(
             f"abcrown.py not found in {abcrown_dir}.\n"
             "Clone alpha-beta-CROWN under the project root first:\n"
-            "  git clone --recursive https://github.com/Verified-Intelligence/alpha-beta-CROWN.git"
+            "  git clone --recursive "
+            "https://github.com/Verified-Intelligence/alpha-beta-CROWN.git"
         )
 
-    if args.all:
+    # No --config given -> run every config in configs/ (full reproduction).
+    if args.config is None:
         config_dir = project_root / "configs"
         configs = sorted(config_dir.glob("*.yaml"))
         if not configs:
             sys.exit("No YAML config files found in configs/.")
+        print(f"No --config given: running all {len(configs)} configs in configs/.")
     else:
         configs = [Path(args.config)]
 
-    out_lines = [
-        "alpha-beta-CROWN verification summary",
-        "=" * 45,
-    ]
-
     for cfg in configs:
         if not cfg.is_file():
-            out_lines.append(f"\nConfig not found: {cfg}")
+            print(f"Config not found, skipping: {cfg}")
             continue
+        run_one_config(abcrown_dir, cfg, results_root)
 
-        log = run_abcrown(abcrown_dir, cfg)
-
-        log_file = out_dir / f"log_{cfg.stem}.txt"
-        with open(log_file, "w", encoding="utf-8") as f:
-            f.write(log)
-
-        print(f"Full log saved to {log_file}")
-
-        results = parse_results(log)
-
-        if not results:
-            out_lines.append(
-                f"\nConfig: {cfg} -> no per-instance results parsed "
-                f"(check {log_file} for errors or changed log format)"
-            )
-            continue
-
-        summarize(cfg, results, out_lines)
-
-    summary = "\n".join(out_lines)
-
-    print("\n" + summary)
-
-    summary_file = out_dir / "results_summary.txt"
-    with open(summary_file, "w", encoding="utf-8") as f:
-        f.write(summary + "\n")
-
-    print(f"\nSummary saved to {summary_file}")
+    print("\nAll requested configs complete.")
 
 
 if __name__ == "__main__":
