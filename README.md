@@ -57,7 +57,6 @@ MNIST FC의 가중치는 과제 #3 저장소의 `mnist_fc.onnx`를 그대로 재
 ├── mnist_fc.pth                # ONNX에서 이전한 MNIST FC 가중치 (검증에 사용)
 │
 ├── test.py                     # configs/ 전체(또는 --config 하나) 실행 후 결과 파싱
-├── make_comparison_figs.py     # 보고서용 두 검증기 비교 figure 생성
 │
 ├── configs/                    # 검증 설정 (모델·ε·solver 옵션)
 │   ├── fashion_mnist_eps_{1,2,4,6,8,12,16}_255.yaml
