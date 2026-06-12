@@ -1,8 +1,8 @@
 # 과제 #4 — α,β-CROWN을 이용한 신경망 강건성 검증
 
-신뢰할 수 있는 인공지능 (Reliable and Trustworthy Artificial Intelligence)
+신뢰할 수 있는 인공지능 (Reliable and Trustworthy Artificial Intelligence) 4번째 과제
 
-본 저장소는 [α,β-CROWN](https://github.com/Verified-Intelligence/alpha-beta-CROWN) 검증기를
+ [α,β-CROWN](https://github.com/Verified-Intelligence/alpha-beta-CROWN) 검증기를
 사용하여 두 개의 ReLU 신경망에 대한 국소 L∞ 강건성(local robustness)을 검증한다.
 섭동 반경 ε를 변화시키며 검증 난이도가 어떻게 달라지는지 분석하고, 과제 #3에서 사용한
 **동일한** MNIST 완전연결 신경망에 대해 Marabou(SMT 기반 검증기)와 결과를 비교한다.
