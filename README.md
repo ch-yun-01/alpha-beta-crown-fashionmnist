@@ -11,10 +11,10 @@
 
 두 모델 모두 α,β-CROWN에 기본 포함되지 않은 외부 모델이므로 "external model" 요건을 충족한다.
 
-| 모델 | 구조 | 데이터셋 | Clean Acc. | 역할 |
-|------|------|----------|-----------|------|
-| **FashionMNIST CNN** | Conv(1→16,4×4,s2)–ReLU–Conv(16→32,4×4,s2)–ReLU–FC(1568→100)–ReLU–FC(100→10) | FashionMNIST | 90.84% | 외부 합성곱 모델; ε 스윕 + 확장성 |
-| **MNIST FC** | FC(784→32)–ReLU–FC(32→16)–ReLU–FC(16→10) | MNIST | ~95% | 과제 #3과 동일 모델 → Marabou 비교 |
+| 모델 | 구조 | 데이터셋 | Clean Acc. |
+|------|------|----------|-----------|
+| **FashionMNIST CNN** | Conv(1→16,4×4,s2)–ReLU–Conv(16→32,4×4,s2)–ReLU–FC(1568→100)–ReLU–FC(100→10) | FashionMNIST | 90.84% |
+| **MNIST FC** | FC(784→32)–ReLU–FC(32→16)–ReLU–FC(16→10) | MNIST | ~95% |
 
 MNIST FC의 가중치는 과제 #3 저장소의 `mnist_fc.onnx`를 그대로 재사용하여, 두 검증기가
 완전히 동일한 신경망에 대해 실행되도록 하였다.
