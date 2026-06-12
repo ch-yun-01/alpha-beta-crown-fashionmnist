@@ -5,7 +5,7 @@ __pycache__/
 *.log
 .venv/
 env/
-.ipynb_checkpoints/
 data/
+.ipynb_checkpoints/
 datasets/
 .sh
