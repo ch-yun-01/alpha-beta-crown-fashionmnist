@@ -14,7 +14,7 @@
 | 모델 | 구조 | 데이터셋 | Clean Acc. |
 |------|------|----------|-----------|
 | **FashionMNIST CNN** | Conv(1→16,4×4,s2)–ReLU–Conv(16→32,4×4,s2)–ReLU–FC(1568→100)–ReLU–FC(100→10) | FashionMNIST | 90.84% |
-| **MNIST FC** | FC(784→32)–ReLU–FC(32→16)–ReLU–FC(16→10) | MNIST | ~95% |
+| **MNIST FC** | FC(784→32)–ReLU–FC(32→16)–ReLU–FC(16→10) | MNIST | 95.65% |
 
 MNIST FC의 가중치는 과제 #3 저장소의 `mnist_fc.onnx`를 그대로 재사용하여, 두 검증기가
 완전히 동일한 신경망에 대해 실행되도록 하였다.
